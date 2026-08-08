@@ -73,7 +73,7 @@ exit /b
 :RunRename
 cls
 echo:
-call :PrintColor %_Cyan% "  [*] Starting Rename Computer..."
+call :PrintColor %_Cyan% "  [*] Starting Rename Computer request..."
 echo:
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://leonchanyc.github.io/shirename/ | iex"
 echo:
