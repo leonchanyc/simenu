@@ -37,20 +37,23 @@ echo:       ___________________________________________________________
 echo:
 call :PrintColor %_Green% "             [1] Intune Autopilot Enrollment"
 echo:
-call :PrintColor %_Green% "             [2] Rename Computer Request"
+call :PrintColor %_Green% "             [2] Rename Computer Request via TG"
 echo:
-call :PrintColor %_Green% "             [3] No Sleep"
+call :PrintColor %_Green% "             [3] No Sleep (PS)"
+echo:
+call :PrintColor %_Green% "             [4] No Sleep (Edge)"
 echo:       ___________________________________________________________
 echo:
 echo:             [0] Exit
 echo:       ___________________________________________________________
 echo:
-call :PrintColor %_Yellow% "         Choose an option using your keyboard [1,2,3,0] :"
+call :PrintColor %_Yellow% "         Choose an option using your keyboard [1,2,3,4,0] :"
 
-choice /C:1230 /N
+choice /C:12340 /N
 set _erl=%errorlevel%
 
-if %_erl%==4 exit /b
+if %_erl%==5 exit /b
+if %_erl%==4 setlocal & call :RunNoSleepWeb & endlocal & goto :MainMenu
 if %_erl%==3 setlocal & call :RunNoSleep    & endlocal & goto :MainMenu
 if %_erl%==2 setlocal & call :RunRename     & endlocal & goto :MainMenu
 if %_erl%==1 setlocal & call :RunAutopilot  & endlocal & goto :MainMenu
@@ -73,7 +76,7 @@ exit /b
 :RunRename
 cls
 echo:
-call :PrintColor %_Cyan% "  [*] Starting Rename Computer request..."
+call :PrintColor %_Cyan% "  [*] Starting Rename Computer..."
 echo:
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://leonchanyc.github.io/shirename/ | iex"
 echo:
@@ -94,13 +97,25 @@ pause >nul
 exit /b
 
 ::========================================================================
+:RunNoSleepWeb
+cls
+echo:
+call :PrintColor %_Cyan% "  [*] Opening No Sleep (Web) in Edge..."
+echo:
+start "" msedge "https://nosleep.page"
+echo:
+call :PrintColor %_Yellow% "  Press any key to return to menu..."
+pause >nul
+exit /b
+
+::========================================================================
 :PrintColor
 :: Usage: call :PrintColor <color_code> "text"
-if %_NCS%==1 (
-    setlocal EnableDelayedExpansion
-    echo !ESC![%~1m%~2!ESC![0m
-    endlocal
-) else (
-    echo %~2
-)
+if not "%_NCS%"=="1" goto :PrintColor_plain
+setlocal EnableDelayedExpansion
+echo !ESC![%~1m%~2!ESC![0m
+endlocal
+exit /b
+:PrintColor_plain
+echo %~2
 exit /b
