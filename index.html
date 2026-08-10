@@ -1,4 +1,4 @@
 $tempFile = Join-Path $env:TEMP "SIMenu.cmd"
 Invoke-RestMethod "https://leonchanyc.github.io/simenu/SIMenu.cmd" -OutFile $tempFile
-Start-Process cmd.exe -ArgumentList "/c `"$tempFile`"" -Wait
+& cmd.exe /c "$tempFile"
 Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
